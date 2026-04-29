@@ -1,0 +1,105 @@
+/* Grid layout */
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px 40px;
+    margin-bottom: 30px;
+}
+
+/* Field container */
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Field label */
+
+.label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2B5F76;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+/* Field value */
+
+.value {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Currency/date formatting fix */
+
+lightning-formatted-number,
+lightning-formatted-date-time {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Notes section */
+
+.notes-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #f1f1f1;
+}
+
+.notes-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2B5F76;
+    margin-bottom: 14px;
+}
+
+.notes-text {
+    font-size: 15px;
+    color: #444;
+    line-height: 1.5;
+}
+
+/* Optional debug text */
+
+.debug {
+    font-size: 12px;
+    color: #aaa;
+}
+
+/* Member notes */
+
+.member-notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.member-note-bubble {
+    background: #f5f9fc;
+    border: 1px solid #d7e6ee;
+    border-radius: 16px;
+    padding: 14px 16px;
+}
+
+.member-note-date {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.member-note-text {
+    font-size: 15px;
+    color: #2f3a45;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.inline-case-link {
+    display: inline-block;
+    vertical-align: baseline;
+    margin: 0 2px;
+}
