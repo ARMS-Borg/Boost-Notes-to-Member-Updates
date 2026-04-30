@@ -1,0 +1,134 @@
+<template>
+    <c-boost-page title="Bills">
+
+        <!-- Loading -->
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Loading claims"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Claims Table -->
+        <template if:false={isLoading}>
+            <div class="boost-section-box">
+
+                <!-- Filters -->
+                <div class="filter-bar">
+
+                    <lightning-combobox
+                        name="clinicFilter"
+                        label="Clinic"
+                        value={selectedClinic}
+                        options={clinicOptions}
+                        onchange={handleClinicChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        name="statusFilter"
+                        label="Claim Status"
+                        value={selectedStatus}
+                        options={statusOptions}
+                        onchange={handleStatusChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        name="claimTypeFilter"
+                        label="Claim Type"
+                        value={selectedClaimType}
+                        options={claimTypeOptions}
+                        onchange={handleClaimTypeChange}>
+                    </lightning-combobox>
+
+                    <lightning-input
+                        type="date"
+                        name="dosStart"
+                        label="DOS From"
+                        value={dosStart}
+                        onchange={handleDosStartChange}>
+                    </lightning-input>
+
+                    <lightning-input
+                        type="date"
+                        name="dosEnd"
+                        label="DOS To"
+                        value={dosEnd}
+                        onchange={handleDosEndChange}>
+                    </lightning-input>
+
+                </div>
+
+                <!-- Active Filter Pills -->
+                <template if:true={hasActiveFilters}>
+                    <div class="active-filter-bar">
+                        <span class="active-filter-label">Active filters:</span>
+
+                        <template for:each={activeFilters} for:item="filter">
+                            <span key={filter.name} class="filter-pill">
+                                {filter.label}
+                                <button
+                                    class="filter-pill-remove"
+                                    data-filter={filter.name}
+                                    onclick={removeFilter}
+                                    title="Remove filter">
+                                    ×
+                                </button>
+                            </span>
+                        </template>
+
+                        <lightning-button
+                            label="Clear All"
+                            variant="base"
+                            onclick={clearFilters}>
+                        </lightning-button>
+                    </div>
+                </template>
+
+                <template if:true={hasClaims}>
+
+                    <div class="result-summary">
+                        {recordRangeInfo}
+                    </div>
+
+                    <lightning-datatable
+                        key-field="Id"
+                        data={paginatedClaims}
+                        columns={columns}
+                        hide-checkbox-column
+                        onrowaction={handleRowAction}>
+                    </lightning-datatable>
+
+                    <!-- Pagination Controls -->
+                    <div class="pagination-controls">
+                        <lightning-button
+                            label="Previous"
+                            onclick={handlePrevious}
+                            disabled={disablePrevious}>
+                        </lightning-button>
+
+                        <span class="page-info">{pageInfo}</span>
+
+                        <lightning-button
+                            label="Next"
+                            onclick={handleNext}
+                            disabled={disableNext}>
+                        </lightning-button>
+                    </div>
+
+                </template>
+
+                <template if:false={hasClaims}>
+                    <div class="empty-state">
+                        <template if:true={hasActiveFilters}>
+                            No bills found for the selected filters.
+                        </template>
+                        <template if:false={hasActiveFilters}>
+                            No bills found.
+                        </template>
+                    </div>
+                </template>
+
+            </div>
+        </template>
+
+    </c-boost-page>
+</template>
