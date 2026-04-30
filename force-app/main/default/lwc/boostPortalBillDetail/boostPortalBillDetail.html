@@ -1,0 +1,251 @@
+<template>
+
+    <c-boost-page title="Bill Detail">
+
+        <div slot="actions">
+            <lightning-button
+                label="Back to All Bills"
+                variant="base"
+                icon-name="utility:back"
+                onclick={navigateBack}>
+            </lightning-button>
+        </div>
+
+        <!-- Loading -->
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Bill Details -->
+        <template if:true={bill}>
+
+            <div class="boost-section-box">
+
+                <div class="details-grid">
+
+                    <div class="field">
+                        <div class="label">Patient Name</div>
+                        <div class="value">{bill.Patient_Full_Name__c}</div>
+                    </div>
+
+                    <div class="field">
+                        <div class="label">Claim Number</div>
+                        <div class="value">{bill.Claim_Number__c}</div>
+                    </div>
+
+                    <div class="field">
+                        <div class="label">Boost Account</div>
+                        <div class="value">{bill.BoostAccountName__c}</div>
+                    </div>
+
+                    <div class="field">
+                        <div class="label">Claim Type</div>
+                        <div class="value">{bill.Claim_Type__c}</div>
+                    </div>
+
+                    <div class="field">
+                        <div class="label">Member Status</div>
+                        <div class="value">{bill.Member_Status__c}</div>
+                    </div>
+
+                    <div class="field">
+                        <div class="label">DOS Start</div>
+                            <lightning-formatted-date-time
+                                value={bill.DOS_Start__c}
+                                time-zone="UTC"
+                                year="numeric"
+                                month="2-digit"
+                                day="2-digit">
+                            </lightning-formatted-date-time>
+                    </div>
+
+                    <div class="field">
+                        <div class="label">DOS End</div>
+                            <lightning-formatted-date-time
+                                value={bill.DOS_End__c}
+                                time-zone="UTC"
+                                year="numeric"
+                                month="2-digit"
+                                day="2-digit">
+                            </lightning-formatted-date-time>
+                    </div>
+
+                    <div class="field">
+                        <div class="label">Total Units</div>
+                        <div class="value">{bill.Total_Units__c}</div>
+                    </div>
+
+                    <div class="field">
+                        <div class="label">Uploaded</div>
+                        <div class="value">{bill.Uploaded__c}</div>
+                    </div>
+
+                    <div class="field">
+                        <div class="label">Billed Charges</div>
+                        <lightning-formatted-number
+                            value={bill.Billed_Charges__c}
+                            format-style="currency">
+                        </lightning-formatted-number>
+                    </div>
+
+                    <div class="field">
+                        <div class="label">Total Charges</div>
+                        <lightning-formatted-number
+                            value={bill.Total_Charges__c}
+                            format-style="currency">
+                        </lightning-formatted-number>
+                    </div>
+
+                </div>
+
+                    <div class="notes-section">
+                        <div class="notes-title">Notes For Member</div>
+
+                        <template if:true={hasMemberNotes}>
+                            <div class="member-notes-list">
+                                <template for:each={memberNotes} for:item="note">
+                                    <div key={note.id} class="member-note-bubble">
+
+                                        <div class="member-note-date">
+                                            <lightning-formatted-date-time
+                                                value={note.createdDate}
+                                                year="numeric"
+                                                month="2-digit"
+                                                day="2-digit"
+                                                hour="2-digit"
+                                                minute="2-digit">
+                                            </lightning-formatted-date-time>
+                                        </div>
+
+                                        <div class="member-note-text">
+                                            <template if:true={note.isCaseAdvice}>
+                                                {note.notePrefix}
+                                                <lightning-button
+                                                    variant="base"
+                                                    class="inline-case-link"
+                                                    label={note.relatedCaseNumber}
+                                                    data-record-id={note.relatedCaseId}
+                                                    onclick={handleMemberNoteCaseClick}>
+                                                </lightning-button>
+                                                {note.noteSuffix}
+                                            </template>
+
+                                            <template if:false={note.isCaseAdvice}>
+                                                {note.noteText}
+                                            </template>
+                                        </div>
+
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:false={hasMemberNotes}>
+                            <p>No member notes found.</p>
+                        </template>
+                    </div>
+
+                <div class="notes-section">
+                    <div class="notes-title">Denial Reason</div>
+                    <div class="notes-text">{bill.Denial_Reason__c}</div>
+                </div>
+
+                <template if:true={hasCheckPayments}>
+                    <div class="notes-section">
+
+                        <div class="notes-title">Related Check Payments</div>
+
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th>Check Payment Name</th>
+                                    <th>Check Date</th>
+                                    <th>Amount Paid</th>
+                                    <th>Total Check Amount</th>
+                                    <th>Payor</th>
+                                    <th>Provider Clinic</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <template for:each={checkPayments} for:item="payment">
+                                    <tr key={payment.id}>
+
+                                        <td>
+                                            <template if:true={payment.arnCheckToMemberId}>
+                                                <lightning-button
+                                                    variant="base"
+                                                    label={payment.name}
+                                                    data-record-id={payment.arnCheckToMemberId}
+                                                    onclick={handleArnCheckToMemberClick}>
+                                                </lightning-button>
+                                            </template>
+                                            <template if:false={payment.arnCheckToMemberId}>
+                                                {payment.name}
+                                            </template>
+                                        </td>
+
+                                        <td>
+                                            <lightning-formatted-date-time
+                                                value={payment.checkDate}
+                                                time-zone="UTC"
+                                                year="numeric"
+                                                month="2-digit"
+                                                day="2-digit">
+                                            </lightning-formatted-date-time>
+                                        </td>
+
+                                        <td>
+                                            <lightning-formatted-number
+                                                value={payment.amountPaid}
+                                                format-style="currency">
+                                            </lightning-formatted-number>
+                                        </td>
+
+                                        <td>
+                                            <lightning-formatted-number
+                                                value={payment.totalCheckAmount}
+                                                format-style="currency">
+                                            </lightning-formatted-number>
+                                        </td>
+
+                                        <td>{payment.payor}</td>
+                                        <td>{payment.providerClinic}</td>
+
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </template>
+
+                <div class="notes-section">
+
+                    <div class="notes-title">Related Cases</div>
+
+                    <template if:true={hasCases}>
+                        <lightning-datatable
+                            key-field="caseId"
+                            data={cases}
+                            columns={caseColumns}
+                            hide-checkbox-column
+                            onrowaction={handleCaseRowAction}>
+                        </lightning-datatable>
+                    </template>
+
+                    <template if:false={hasCases}>
+                        <p>No related cases found.</p>
+                    </template>
+
+                </div>
+
+            </div>
+
+        </template>
+
+    </c-boost-page>
+
+</template>
