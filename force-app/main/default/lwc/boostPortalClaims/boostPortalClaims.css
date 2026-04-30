@@ -1,0 +1,87 @@
+/* Styles moved to boostPage.css */
+.pagination-controls {
+    display: flex;
+    justify-content: center; /* center horizontally */
+    align-items: center;
+    gap: 1.5rem; /* spacing between buttons + text */
+    margin-top: 1rem;
+}
+
+
+/* .page-info {
+    font-weight: 600;
+    font-size: 0.95rem;
+} */
+
+/* .filter-bar {
+    margin-bottom: 1rem;
+    max-width: 300px;
+} */
+
+.filter-bar {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: end;
+}
+
+.active-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.active-filter-label {
+    font-weight: 600;
+}
+
+.filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: #f3f3f3;
+    border: 1px solid #d8dde6;
+    font-size: 0.85rem;
+}
+
+.filter-pill-remove {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+}
+
+.result-summary {
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: #555;
+}
+
+.page-info {
+    font-weight: 600;
+}
+
+.empty-state {
+    padding: 2rem;
+    text-align: center;
+    color: #555;
+}
+
+@media screen and (max-width: 900px) {
+    .filter-bar {
+        grid-template-columns: repeat(2, minmax(160px, 1fr));
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .filter-bar {
+        grid-template-columns: 1fr;
+    }
+}
